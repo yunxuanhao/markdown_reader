@@ -1,6 +1,8 @@
 name: Release
 
 on:
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
       version:
@@ -123,12 +125,14 @@ jobs:
       - name: Display structure
         run: ls -R artifacts
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v${{ github.event.inputs.version || 'latest' }}
-          name: v${{ github.event.inputs.version || 'latest' }}
-          draft: true
-          files: artifacts/**/*
+      - name: Upload to Release
+        run: |
+          TAG="${{ github.event.release.tag_name || format('v{0}', github.event.inputs.version) || 'latest' }}"
+          # If triggered by release event, upload to that release
+          if [ -n "${{ github.event.release.upload_url }}" ]; then
+            gh release upload "$TAG" artifacts/**/* --clobber
+          else
+            gh release create "$TAG" artifacts/**/* --draft --title "$TAG"
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
