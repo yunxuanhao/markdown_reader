@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Rust / Tauri
+src-tauri/target/
+src-tauri/gen/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Icon source (keep only src-tauri/icons/icon.png)
+/icon.png
+src-tauri/icons/*
+!src-tauri/icons/icon.png
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Vibe runtime outputs (local only)
+outputs/
+.vibeskills/
+
+# Misc
+*.tgz
+*.tar.gz
+
+# claude
+.claude/

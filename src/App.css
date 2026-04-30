@@ -1,0 +1,312 @@
+/* ========== CSS Custom Properties ========== */
+:root,
+[data-theme="light"] {
+  --bg: #ffffff;
+  --bg-secondary: #f6f8fa;
+  --bg-tertiary: #e8eaed;
+  --text: #24292f;
+  --text-secondary: #656d76;
+  --border: #d0d7de;
+  --accent: #0969da;
+  --accent-hover: #0550b3;
+  --sidebar-bg: #f6f8fa;
+  --tab-active-bg: #ffffff;
+  --tab-hover-bg: #e8eaed;
+  --shadow: rgba(0, 0, 0, 0.08);
+  --code-bg: #f6f8fa;
+}
+
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-tertiary: #21262d;
+  --text: #c9d1d9;
+  --text-secondary: #8b949e;
+  --border: #30363d;
+  --accent: #58a6ff;
+  --accent-hover: #79b8ff;
+  --sidebar-bg: #161b22;
+  --tab-active-bg: #0d1117;
+  --tab-hover-bg: #1c2128;
+  --shadow: rgba(0, 0, 0, 0.3);
+  --code-bg: #161b22;
+}
+
+/* ========== Reset & Base ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ========== Layout ========== */
+.app {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ========== Sidebar ========== */
+.sidebar {
+  width: 240px;
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  user-select: none;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
+
+.theme-toggle {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.theme-btn:hover {
+  color: var(--text);
+}
+
+.theme-btn.active {
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: 0 1px 2px var(--shadow);
+}
+
+.open-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.open-btn:hover {
+  background: var(--tab-hover-bg);
+  border-color: var(--accent);
+}
+
+.file-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 8px;
+}
+
+.file-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.1s;
+  margin-bottom: 2px;
+}
+
+.file-tab:hover {
+  background: var(--tab-hover-bg);
+  color: var(--text);
+}
+
+.file-tab.active {
+  background: var(--tab-active-bg);
+  color: var(--text);
+  box-shadow: 0 1px 3px var(--shadow);
+}
+
+.file-icon {
+  display: flex;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.file-tab.active .file-icon {
+  color: var(--accent);
+  opacity: 1;
+}
+
+.file-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.close-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 4px;
+  opacity: 0;
+  transition: all 0.1s;
+  flex-shrink: 0;
+}
+
+.file-tab:hover .close-tab {
+  opacity: 1;
+}
+
+.close-tab:hover {
+  background: var(--bg-tertiary);
+  color: var(--text);
+}
+
+/* ========== Content ========== */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--bg);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-secondary);
+  gap: 8px;
+}
+
+.empty-icon {
+  margin-bottom: 8px;
+  opacity: 0.3;
+}
+
+.empty-state p {
+  font-size: 15px;
+}
+
+.empty-hint {
+  font-size: 12px !important;
+  opacity: 0.6;
+}
+
+/* ========== Markdown Body Overrides ========== */
+.markdown-body {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 48px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Override github-markdown-css for dark mode */
+.markdown-dark.markdown-body {
+  color-scheme: dark;
+  --color-canvas-default: var(--bg);
+  --color-canvas-subtle: var(--bg-secondary);
+  --color-border-default: var(--border);
+  --color-fg-default: var(--text);
+  --color-fg-muted: var(--text-secondary);
+  --color-accent-fg: var(--accent);
+  --color-neutral-muted: var(--border);
+}
+
+/* Code blocks */
+.markdown-body pre {
+  background: var(--code-bg) !important;
+}
+
+.markdown-body code {
+  background: var(--code-bg);
+}
+
+/* Smooth scroll */
+.content {
+  scroll-behavior: smooth;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Table styling for markdown */
+.markdown-body table {
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.markdown-body img {
+  max-width: 100%;
+}
+
+/* Task list styling */
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-body .task-list-item input[type="checkbox"] {
+  margin-right: 8px;
+}
