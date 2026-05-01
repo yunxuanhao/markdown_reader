@@ -131,11 +131,10 @@ jobs:
       - name: Upload to Release
         run: |
           TAG="${{ github.event.release.tag_name || format('v{0}', github.event.inputs.version) || 'latest' }}"
-          # If triggered by release event, upload to that release
           if [ -n "${{ github.event.release.upload_url }}" ]; then
-            gh release upload "$TAG" artifacts/**/* --clobber
+            find artifacts -type f -exec gh release upload "$TAG" {} --clobber \;
           else
-            gh release create "$TAG" artifacts/**/* --draft --title "$TAG"
+            find artifacts -type f -exec gh release create "$TAG" {} --draft --title "$TAG" \;
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
