@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MD Reader — Free Lightweight Desktop Markdown Reader with GitHub-Style Rendering</title>
+<meta name="description" content="MD Reader is a free, lightweight desktop Markdown reader with GitHub-style rendering, dark mode, and multi-tab sidebar. Available for macOS, Windows, and Linux. Download now.">
+<meta name="keywords" content="markdown reader, desktop markdown reader, markdown viewer, github markdown, free markdown reader, open source markdown reader, lightweight markdown app, macOS markdown reader, Windows markdown reader, Linux markdown reader">
+<meta name="author" content="MD Reader">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://yunxuanhao.github.io/markdown_reader/">
+<meta property="og:title" content="MD Reader — Free Lightweight Desktop Markdown Reader">
+<meta property="og:description" content="A beautiful desktop Markdown reader with GitHub-style rendering. Light/dark themes, drag & drop, multi-tab sidebar. Free & open source.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yunxuanhao.github.io/markdown_reader/">
+<meta property="og:image" content="https://yunxuanhao.github.io/markdown_reader/images/icon.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:image:alt" content="MD Reader application icon — a blue document icon">
+<meta property="og:site_name" content="MD Reader">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MD Reader — Free Lightweight Desktop Markdown Reader">
+<meta name="twitter:description" content="Beautiful desktop Markdown reader with GitHub-style rendering. Free, open source, cross-platform.">
+<meta name="twitter:image" content="https://yunxuanhao.github.io/markdown_reader/images/icon.png">
+<meta name="twitter:image:alt" content="MD Reader application icon">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "MD Reader",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": ["macOS", "Windows", "Linux"],
+  "description": "A free, lightweight desktop Markdown reader with GitHub-style rendering, dark mode, and multi-tab sidebar.",
+  "url": "https://yunxuanhao.github.io/markdown_reader/",
+  "image": "https://yunxuanhao.github.io/markdown_reader/images/icon.png",
+  "author": {
+    "@type": "Person",
+    "name": "yunxuanhao"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "softwareVersion": "1.0.0",
+  "license": "https://opensource.org/licenses/MIT"
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf8f5;
+  --bg-card: #ffffff;
+  --text: #1a1a1a;
+  --text-secondary: #5c5c5c;
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --border: #e8e5e0;
+  --code-bg: #1e1b2e;
+  --code-text: #e0dce8;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 24px rgba(0,0,0,0.06);
+  --radius: 12px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(79,70,229,0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(13,148,136,0.03) 0%, transparent 50%);
+}
+
+h1, h2, h3 { font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; }
+
+.container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+/* Nav */
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 32px; max-width: 1080px; margin: 0 auto;
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+.nav-logo img { width: 32px; height: 32px; border-radius: 6px; }
+.nav-logo span { font-family: 'DM Serif Display', serif; font-size: 20px; }
+.nav-links { display: flex; gap: 20px; align-items: center; }
+.nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+.lang-switch {
+  background: var(--bg-card); border: 1px solid var(--border);
+  padding: 6px 14px; border-radius: 20px; font-size: 13px;
+  cursor: pointer; color: var(--text-secondary); transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.lang-switch:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Hero */
+.hero { text-align: center; padding: 80px 24px 60px; }
+.hero-icon { width: 80px; height: 80px; border-radius: 18px; margin-bottom: 28px; box-shadow: var(--shadow-md); }
+.hero h1 { font-size: clamp(40px, 6vw, 64px); letter-spacing: -1px; margin-bottom: 16px; line-height: 1.15; }
+.hero .subtitle { font-size: 18px; color: var(--text-secondary); max-width: 500px; margin: 0 auto 36px; }
+.hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: 8px; font-size: 15px; font-weight: 500;
+  text-decoration: none; transition: all 0.2s; cursor: pointer; border: none;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(79,70,229,0.25); }
+.btn-outline { background: var(--bg-card); color: var(--text); border: 1px solid var(--border); }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Screenshot strip */
+.screenshots { padding: 0 24px 60px; }
+.screenshot-row {
+  display: flex; gap: 16px; justify-content: center; max-width: 900px; margin: 0 auto;
+}
+.screenshot-row img {
+  width: calc(50% - 8px); border-radius: var(--radius);
+  box-shadow: var(--shadow-md); border: 1px solid var(--border);
+  transition: transform 0.3s;
+}
+.screenshot-row img:hover { transform: scale(1.02); }
+
+/* Features */
+.features { padding: 60px 0; }
+.features h2 { text-align: center; font-size: 32px; margin-bottom: 48px; }
+.feature-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px; max-width: 900px; margin: 0 auto;
+}
+.feature-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px; transition: all 0.2s;
+}
+.feature-card:hover { border-color: transparent; box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.feature-icon { font-size: 28px; margin-bottom: 14px; }
+.feature-card h3 { font-size: 18px; margin-bottom: 8px; font-family: 'DM Sans', sans-serif; font-weight: 600; }
+.feature-card p { color: var(--text-secondary); font-size: 14px; line-height: 1.6; }
+
+/* Download */
+.download { padding: 60px 0; }
+.download h2 { text-align: center; font-size: 32px; margin-bottom: 8px; }
+.download .version { text-align: center; color: var(--text-secondary); font-size: 14px; margin-bottom: 40px; }
+.download-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px; max-width: 700px; margin: 0 auto;
+}
+.download-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px; text-align: center;
+  text-decoration: none; color: var(--text); transition: all 0.2s;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.download-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.download-card .platform-icon { font-size: 32px; }
+.download-card .platform-name { font-weight: 600; font-size: 15px; }
+.download-card .platform-ext { color: var(--text-secondary); font-size: 13px; }
+.download-card .platform-arch { color: var(--text-secondary); font-size: 12px; opacity: 0.7; }
+
+/* macOS warning */
+.macos-warning {
+  background: #fff8e6; border: 1px solid #f0d88a;
+  border-radius: var(--radius); padding: 20px 24px;
+  max-width: 700px; margin: 40px auto 0;
+  font-size: 14px; color: #8a6d14;
+}
+.macos-warning strong { color: #6d5410; }
+.macos-warning code {
+  background: #f5e8c0; padding: 2px 6px; border-radius: 4px;
+  font-size: 13px; color: #5a4008;
+}
+
+/* Footer */
+/* FAQ */
+.faq { padding: 60px 0; }
+.faq h2 { text-align: center; font-size: 32px; margin-bottom: 48px; }
+.faq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto; }
+.faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; }
+.faq-item h3 { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 15px; margin-bottom: 8px; }
+.faq-item p { color: var(--text-secondary); font-size: 14px; line-height: 1.6; }
+.faq-item code { background: var(--bg); padding: 1px 6px; border-radius: 4px; font-size: 13px; color: var(--accent); }
+
+footer { text-align: center; padding: 48px 24px; color: var(--text-secondary); font-size: 13px; }
+footer a { color: var(--accent); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* Loading / error states */
+.loading { text-align: center; color: var(--text-secondary); padding: 20px; }
+.error { text-align: center; color: #dc2626; padding: 20px; font-size: 14px; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .screenshot-row { flex-direction: column; }
+  .screenshot-row img { width: 100%; }
+  .hero { padding: 48px 16px 40px; }
+  .hero h1 { font-size: 36px; }
+  nav { padding: 16px 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="images/icon.png" alt="MD Reader desktop markdown reader application icon" width="32" height="32">
+    <span>MD Reader</span>
+  </a>
+  <div class="nav-links">
+    <a href="#features" data-i18n="nav_features">Features</a>
+    <a href="#download" data-i18n="nav_download">Download</a>
+    <a href="#faq" data-i18n="nav_faq">FAQ</a>
+    <a href="https://github.com/yunxuanhao/markdown_reader" target="_blank" rel="noopener">GitHub</a>
+    <button class="lang-switch" onclick="toggleLang()" id="lang-btn">中文</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <img src="images/icon.png" alt="MD Reader — free lightweight desktop Markdown reader app" class="hero-icon" width="80" height="80">
+  <h1 data-i18n="hero_title">Read Markdown<br>Beautifully</h1>
+  <p class="subtitle" data-i18n="hero_sub">A lightweight desktop reader with GitHub-style rendering, multi-tab sidebar, and system-aware dark mode.</p>
+  <div class="hero-buttons">
+    <a href="#download" class="btn btn-primary" data-i18n="hero_download">Download Free</a>
+    <a href="https://github.com/yunxuanhao/markdown_reader" target="_blank" rel="noopener" class="btn btn-outline">View on GitHub</a>
+  </div>
+</section>
+
+<section class="screenshots">
+  <div class="screenshot-row">
+    <img src="images/light_mode.png" alt="MD Reader light mode" loading="lazy">
+    <img src="images/dark_mode.png" alt="MD Reader dark mode" loading="lazy">
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="container">
+    <h2 data-i18n="features_title">Everything you need</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">✦</div>
+        <h3 data-i18n="feat_render_title">GitHub-style Rendering</h3>
+        <p data-i18n="feat_render_desc">Exact same look as GitHub README pages. GFM tables, task lists, code blocks — all rendered perfectly.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">◐</div>
+        <h3 data-i18n="feat_theme_title">Light / Dark / Auto</h3>
+        <p data-i18n="feat_theme_desc">Three theme modes with instant switching. Auto mode follows your OS appearance seamlessly.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">☖</div>
+        <h3 data-i18n="feat_tabs_title">Multi-tab Sidebar</h3>
+        <p data-i18n="feat_tabs_desc">Open multiple files at once and switch between them in the sidebar. Clean and organized.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⤓</div>
+        <h3 data-i18n="feat_drag_title">Drag &amp; Drop</h3>
+        <p data-i18n="feat_drag_desc">Just drag <code>.md</code> files into the window. No file dialogs needed — it just works.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3 data-i18n="feat_perf_title">Extremely Lightweight</h3>
+        <p data-i18n="feat_perf_desc">~3.3 MB binary. Built with Rust and Tauri. Starts instantly, uses minimal memory.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⎔</div>
+        <h3 data-i18n="feat_cross_title">Cross-platform</h3>
+        <p data-i18n="feat_cross_desc">Native apps for macOS (ARM64 &amp; Intel), Windows (x64), and Linux (x64). True platform feel.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="download" id="download">
+  <div class="container">
+    <h2 data-i18n="download_title">Download</h2>
+    <p class="version" id="version-info">Loading latest release&hellip;</p>
+    <div id="download-grid" class="download-grid"></div>
+    <div id="macos-warning" class="macos-warning" style="display:none">
+      <strong data-i18n="mac_warn_title">&#9888; macOS users:</strong>
+      <span data-i18n="mac_warn_text">The app is not notarized. If you see a "damaged" warning, right-click the app and select <strong>Open</strong>, or run:</span>
+      <br><br>
+      <code>xattr -d com.apple.quarantine "Markdown Reader.app"</code>
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="container">
+    <h2 data-i18n="faq_title">Frequently Asked Questions</h2>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <h3 data-i18n="faq_q1">What is MD Reader?</h3>
+        <p data-i18n="faq_a1">MD Reader is a free, open-source desktop Markdown reader that renders <code>.md</code> files exactly like GitHub README pages. It supports GFM tables, task lists, code blocks, and more — all in a clean, distraction-free interface.</p>
+      </div>
+      <div class="faq-item">
+        <h3 data-i18n="faq_q2">Is MD Reader really free?</h3>
+        <p data-i18n="faq_a2">Yes, completely free and open source under the MIT license. No ads, no telemetry, no premium tiers. Download and use it forever.</p>
+      </div>
+      <div class="faq-item">
+        <h3 data-i18n="faq_q3">Which platforms are supported?</h3>
+        <p data-i18n="faq_a3">MD Reader runs on macOS (both Apple Silicon and Intel), Windows x64, and Linux x64. All platforms get native builds with genuine platform look and feel.</p>
+      </div>
+      <div class="faq-item">
+        <h3 data-i18n="faq_q4">How does it compare to other Markdown readers?</h3>
+        <p data-i18n="faq_a4">MD Reader is built with Rust and Tauri, making it extremely lightweight (~3.3 MB) compared to Electron-based alternatives. It uses react-markdown for GitHub-accurate rendering, and includes features like multi-tab sidebar and system-aware dark mode that many free readers lack.</p>
+      </div>
+      <div class="faq-item">
+        <h3 data-i18n="faq_q5">Can I use it offline?</h3>
+        <p data-i18n="faq_a5">Absolutely. MD Reader works completely offline. No internet connection required to read your local Markdown files.</p>
+      </div>
+      <div class="faq-item">
+        <h3 data-i18n="faq_q6">How do I open a file?</h3>
+        <p data-i18n="faq_a6">Three ways: drag and drop <code>.md</code> files into the window, click "Open File" in the sidebar, or use the file dialog. You can open multiple files and switch between them using the sidebar tabs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>MD Reader &middot; MIT License &middot; <a href="https://github.com/yunxuanhao/markdown_reader" target="_blank" rel="noopener">GitHub</a> &middot; <a href="https://github.com/yunxuanhao/markdown_reader/blob/main/README.md" target="_blank" rel="noopener">README</a></p>
+  </div>
+</footer>
+
+<script>
+const i18n = {
+  en: {
+    nav_features: 'Features', nav_download: 'Download', nav_faq: 'FAQ',
+    hero_title: 'Read Markdown<br>Beautifully',
+    hero_sub: 'A lightweight desktop reader with GitHub-style rendering, multi-tab sidebar, and system-aware dark mode.',
+    hero_download: 'Download Free',
+    features_title: 'Everything you need',
+    feat_render_title: 'GitHub-style Rendering',
+    feat_render_desc: 'Exact same look as GitHub README pages. GFM tables, task lists, code blocks — all rendered perfectly.',
+    feat_theme_title: 'Light / Dark / Auto',
+    feat_theme_desc: 'Three theme modes with instant switching. Auto mode follows your OS appearance seamlessly.',
+    feat_tabs_title: 'Multi-tab Sidebar',
+    feat_tabs_desc: 'Open multiple files at once and switch between them in the sidebar. Clean and organized.',
+    feat_drag_title: 'Drag & Drop',
+    feat_drag_desc: 'Just drag <code>.md</code> files into the window. No file dialogs needed — it just works.',
+    feat_perf_title: 'Extremely Lightweight',
+    feat_perf_desc: '~3.3 MB binary. Built with Rust and Tauri. Starts instantly, uses minimal memory.',
+    feat_cross_title: 'Cross-platform',
+    feat_cross_desc: 'Native apps for macOS (ARM64 & Intel), Windows (x64), and Linux (x64). True platform feel.',
+    download_title: 'Download',
+    mac_warn_title: '⚠ macOS users:',
+    mac_warn_text: 'The app is not notarized. If you see a "damaged" warning, right-click the app and select <strong>Open</strong>, or run:',
+    faq_title: 'Frequently Asked Questions',
+    faq_q1: 'What is MD Reader?',
+    faq_a1: 'MD Reader is a free, open-source desktop Markdown reader that renders <code>.md</code> files exactly like GitHub README pages. It supports GFM tables, task lists, code blocks, and more — all in a clean, distraction-free interface.',
+    faq_q2: 'Is MD Reader really free?',
+    faq_a2: 'Yes, completely free and open source under the MIT license. No ads, no telemetry, no premium tiers. Download and use it forever.',
+    faq_q3: 'Which platforms are supported?',
+    faq_a3: 'MD Reader runs on macOS (both Apple Silicon and Intel), Windows x64, and Linux x64. All platforms get native builds with genuine platform look and feel.',
+    faq_q4: 'How does it compare to other Markdown readers?',
+    faq_a4: 'MD Reader is built with Rust and Tauri, making it extremely lightweight (~3.3 MB) compared to Electron-based alternatives. It uses react-markdown for GitHub-accurate rendering, and includes features like multi-tab sidebar and system-aware dark mode that many free readers lack.',
+    faq_q5: 'Can I use it offline?',
+    faq_a5: 'Absolutely. MD Reader works completely offline. No internet connection required to read your local Markdown files.',
+    faq_q6: 'How do I open a file?',
+    faq_a6: 'Three ways: drag and drop <code>.md</code> files into the window, click "Open File" in the sidebar, or use the file dialog. You can open multiple files and switch between them using the sidebar tabs.',
+    loading: 'Loading latest release…',
+    error: 'Failed to load release info. Check the <a href="https://github.com/yunxuanhao/markdown_reader/releases">Releases page</a>.'
+  },
+  zh: {
+    nav_features: '功能', nav_download: '下载', nav_faq: '常见问题',
+    hero_title: '优雅地阅读<br>Markdown',
+    hero_sub: '轻量级桌面 Markdown 阅读器，支持 GitHub 风格渲染、多标签侧边栏和自动跟随系统的暗色模式。',
+    hero_download: '免费下载',
+    features_title: '功能特性',
+    feat_render_title: 'GitHub 风格渲染',
+    feat_render_desc: '与 GitHub README 页面完全一致的展示效果，完美支持 GFM 表格、任务列表和代码块。',
+    feat_theme_title: '亮色 / 暗色 / 自动',
+    feat_theme_desc: '三种主题模式一键切换。自动模式无缝跟随操作系统外观变化。',
+    feat_tabs_title: '多标签侧边栏',
+    feat_tabs_desc: '同时打开多个文件，在侧边栏中快速切换。整洁有序。',
+    feat_drag_title: '拖拽打开',
+    feat_drag_desc: '将 <code>.md</code> 文件拖入窗口即可打开，无需文件对话框。',
+    feat_perf_title: '极致轻量',
+    feat_perf_desc: '约 3.3 MB 的二进制文件。基于 Rust 和 Tauri 构建，启动迅速，内存占用低。',
+    feat_cross_title: '跨平台',
+    feat_cross_desc: '原生应用，支持 macOS（ARM64 和 Intel）、Windows（x64）和 Linux（x64）。',
+    faq_title: '常见问题',
+    faq_q1: 'MD Reader 是什么？',
+    faq_a1: 'MD Reader 是一款免费开源的桌面 Markdown 阅读器，可将 <code>.md</code> 文件渲染为与 GitHub README 页面完全一致的效果。支持 GFM 表格、任务列表、代码块等，界面简洁无干扰。',
+    faq_q2: 'MD Reader 真的免费吗？',
+    faq_a2: '是的，完全免费开源，使用 MIT 许可证。没有广告、不收集数据、没有付费版本。可永久免费下载使用。',
+    faq_q3: '支持哪些操作系统？',
+    faq_a3: 'MD Reader 支持 macOS（Apple Silicon 和 Intel）、Windows x64 和 Linux x64。所有平台均提供原生构建，具有真正的平台体验。',
+    faq_q4: '与其他 Markdown 阅读器相比如何？',
+    faq_a4: 'MD Reader 使用 Rust 和 Tauri 构建，与基于 Electron 的同类产品相比极其轻量（约 3.3 MB）。使用 react-markdown 进行 GitHub 精确渲染，支持多标签侧边栏和跟随系统的暗色模式，这些功能在许多免费阅读器中是缺失的。',
+    faq_q5: '可以离线使用吗？',
+    faq_a5: '完全可以。MD Reader 完全离线工作，读取本地 Markdown 文件不需要任何网络连接。',
+    faq_q6: '如何打开文件？',
+    faq_a6: '三种方式：将 <code>.md</code> 文件拖入窗口、点击侧边栏中的"Open File"按钮、或使用文件对话框。可以同时打开多个文件并在侧边栏标签中切换。',
+    download_title: '下载',
+    mac_warn_title: '⚠ macOS 用户请注意：',
+    mac_warn_text: '应用未经过公证。如果打开时提示"已损坏"，请右键点击应用选择 <strong>打开</strong>，或执行：',
+    loading: '正在获取最新版本…',
+    error: '获取版本信息失败。请查看 <a href="https://github.com/yunxuanhao/markdown_reader/releases">Releases 页面</a>。'
+  }
+};
+
+let currentLang = 'en';
+
+function toggleLang() {
+  currentLang = currentLang === 'en' ? 'zh' : 'en';
+  document.getElementById('lang-btn').textContent = currentLang === 'en' ? '中文' : 'English';
+  document.documentElement.lang = currentLang === 'en' ? 'en' : 'zh-CN';
+  applyLang();
+  fetchRelease();
+}
+
+function applyLang() {
+  const dict = i18n[currentLang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key]) el.innerHTML = dict[key];
+  });
+}
+
+function getPlatformIcon(ext) {
+  if (ext === 'dmg') return '🍎';
+  if (ext === 'msi' || ext === 'exe') return '🪟';
+  if (ext === 'deb' || ext === 'AppImage') return '🐧';
+  return '📦';
+}
+
+function getPlatformName(ext) {
+  if (ext === 'dmg') return 'macOS';
+  if (ext === 'msi' || ext === 'exe') return 'Windows';
+  if (ext === 'deb' || ext === 'AppImage') return 'Linux';
+  return ext;
+}
+
+function getArchHint(name) {
+  if (name.includes('aarch64') || name.includes('arm64')) return 'ARM64';
+  if (name.includes('x64') || name.includes('x86_64') || name.includes('amd64')) return 'x64';
+  return '';
+}
+
+async function fetchRelease() {
+  const grid = document.getElementById('download-grid');
+  const versionEl = document.getElementById('version-info');
+  const warning = document.getElementById('macos-warning');
+  const dict = i18n[currentLang];
+
+  grid.innerHTML = '<div class="loading">' + dict.loading + '</div>';
+
+  try {
+    const resp = await fetch('https://api.github.com/repos/yunxuanhao/markdown_reader/releases/latest');
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const release = await resp.json();
+
+    versionEl.textContent = (currentLang === 'zh' ? '最新版本：' : 'Latest version: ') + release.tag_name;
+
+    const assets = release.assets || [];
+    // Filter out irrelevant files, keep installers only
+    const filtered = assets.filter(a => {
+      const n = a.name.toLowerCase();
+      return (n.endsWith('.dmg') || n.endsWith('.msi') || n.endsWith('.exe') || n.endsWith('.deb') || n.endsWith('.appimage'));
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div class="error">' + dict.error + '</div>';
+      return;
+    }
+
+    grid.innerHTML = '';
+    let hasMac = false;
+    filtered.forEach(a => {
+      const ext = a.name.split('.').pop();
+      if (ext === 'dmg') hasMac = true;
+      const arch = getArchHint(a.name);
+      const card = document.createElement('a');
+      card.className = 'download-card';
+      card.href = a.browser_download_url;
+      card.innerHTML = [
+        '<span class="platform-icon">' + getPlatformIcon(ext) + '</span>',
+        '<span class="platform-name">' + getPlatformName(ext) + '</span>',
+        '<span class="platform-ext">.' + ext + '</span>',
+        arch ? '<span class="platform-arch">' + arch + '</span>' : ''
+      ].join('');
+      grid.appendChild(card);
+    });
+
+    if (hasMac) warning.style.display = 'block';
+    else warning.style.display = 'none';
+
+  } catch (err) {
+    console.error(err);
+    versionEl.textContent = '';
+    grid.innerHTML = '<div class="error">' + dict.error + '</div>';
+  }
+}
+
+// Init
+applyLang();
+fetchRelease();
+</script>
+
+</body>
+</html>
