@@ -69,6 +69,12 @@ jobs:
       - name: Build
         run: pnpm tauri build --target ${{ matrix.platform.target }}
 
+      - name: Fix macOS ad-hoc signature
+        if: runner.os == 'macOS'
+        run: |
+          APP="src-tauri/target/${{ matrix.platform.target }}/release/bundle/macos/"*.app
+          codesign --force --deep --sign - "$APP"
+
       - name: Upload macOS ARM artifact
         if: matrix.platform.target == 'aarch64-apple-darwin'
         uses: actions/upload-artifact@v4
