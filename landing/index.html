@@ -3,8 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MD Reader — A lightweight Markdown reader for desktop</title>
-<meta name="description" content="MD Reader is a lightweight, beautiful desktop Markdown reader with GitHub-style rendering. Available for macOS, Windows, and Linux.">
+<title>MD Reader — Free Lightweight Desktop Markdown Reader with GitHub-Style Rendering</title>
+<meta name="description" content="MD Reader is a free, lightweight desktop Markdown reader with GitHub-style rendering, dark mode, and multi-tab sidebar. Available for macOS, Windows, and Linux. Download now.">
+<meta name="keywords" content="markdown reader, desktop markdown reader, markdown viewer, github markdown, free markdown reader, open source markdown reader, lightweight markdown app, macOS markdown reader, Windows markdown reader, Linux markdown reader">
+<meta name="author" content="MD Reader">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://yunxuanhao.github.io/markdown_reader/">
+<meta property="og:title" content="MD Reader — Free Lightweight Desktop Markdown Reader">
+<meta property="og:description" content="A beautiful desktop Markdown reader with GitHub-style rendering. Light/dark themes, drag & drop, multi-tab sidebar. Free & open source.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yunxuanhao.github.io/markdown_reader/">
+<meta property="og:image" content="https://yunxuanhao.github.io/markdown_reader/images/icon.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:image:alt" content="MD Reader application icon — a blue document icon">
+<meta property="og:site_name" content="MD Reader">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MD Reader — Free Lightweight Desktop Markdown Reader">
+<meta name="twitter:description" content="Beautiful desktop Markdown reader with GitHub-style rendering. Free, open source, cross-platform.">
+<meta name="twitter:image" content="https://yunxuanhao.github.io/markdown_reader/images/icon.png">
+<meta name="twitter:image:alt" content="MD Reader application icon">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "MD Reader",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": ["macOS", "Windows", "Linux"],
+  "description": "A free, lightweight desktop Markdown reader with GitHub-style rendering, dark mode, and multi-tab sidebar.",
+  "url": "https://yunxuanhao.github.io/markdown_reader/",
+  "image": "https://yunxuanhao.github.io/markdown_reader/images/icon.png",
+  "author": {
+    "@type": "Person",
+    "name": "yunxuanhao"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "softwareVersion": "1.0.0",
+  "license": "https://opensource.org/licenses/MIT"
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
@@ -141,6 +183,15 @@ nav {
 }
 
 /* Footer */
+/* FAQ */
+.faq { padding: 60px 0; }
+.faq h2 { text-align: center; font-size: 32px; margin-bottom: 48px; }
+.faq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto; }
+.faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; }
+.faq-item h3 { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 15px; margin-bottom: 8px; }
+.faq-item p { color: var(--text-secondary); font-size: 14px; line-height: 1.6; }
+.faq-item code { background: var(--bg); padding: 1px 6px; border-radius: 4px; font-size: 13px; color: var(--accent); }
+
 footer { text-align: center; padding: 48px 24px; color: var(--text-secondary); font-size: 13px; }
 footer a { color: var(--accent); text-decoration: none; }
 footer a:hover { text-decoration: underline; }
@@ -163,19 +214,20 @@ footer a:hover { text-decoration: underline; }
 
 <nav>
   <a href="/" class="nav-logo">
-    <img src="images/icon.png" alt="MD Reader icon">
+    <img src="images/icon.png" alt="MD Reader desktop markdown reader application icon" width="32" height="32">
     <span>MD Reader</span>
   </a>
   <div class="nav-links">
     <a href="#features" data-i18n="nav_features">Features</a>
     <a href="#download" data-i18n="nav_download">Download</a>
+    <a href="#faq" data-i18n="nav_faq">FAQ</a>
     <a href="https://github.com/yunxuanhao/markdown_reader" target="_blank" rel="noopener">GitHub</a>
     <button class="lang-switch" onclick="toggleLang()" id="lang-btn">中文</button>
   </div>
 </nav>
 
 <section class="hero">
-  <img src="images/icon.png" alt="MD Reader" class="hero-icon">
+  <img src="images/icon.png" alt="MD Reader — free lightweight desktop Markdown reader app" class="hero-icon" width="80" height="80">
   <h1 data-i18n="hero_title">Read Markdown<br>Beautifully</h1>
   <p class="subtitle" data-i18n="hero_sub">A lightweight desktop reader with GitHub-style rendering, multi-tab sidebar, and system-aware dark mode.</p>
   <div class="hero-buttons">
@@ -243,6 +295,38 @@ footer a:hover { text-decoration: underline; }
   </div>
 </section>
 
+<section class="faq" id="faq">
+  <div class="container">
+    <h2 data-i18n="faq_title">Frequently Asked Questions</h2>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <h3 data-i18n="faq_q1">What is MD Reader?</h3>
+        <p data-i18n="faq_a1">MD Reader is a free, open-source desktop Markdown reader that renders <code>.md</code> files exactly like GitHub README pages. It supports GFM tables, task lists, code blocks, and more — all in a clean, distraction-free interface.</p>
+      </div>
+      <div class="faq-item">
+        <h3 data-i18n="faq_q2">Is MD Reader really free?</h3>
+        <p data-i18n="faq_a2">Yes, completely free and open source under the MIT license. No ads, no telemetry, no premium tiers. Download and use it forever.</p>
+      </div>
+      <div class="faq-item">
+        <h3 data-i18n="faq_q3">Which platforms are supported?</h3>
+        <p data-i18n="faq_a3">MD Reader runs on macOS (both Apple Silicon and Intel), Windows x64, and Linux x64. All platforms get native builds with genuine platform look and feel.</p>
+      </div>
+      <div class="faq-item">
+        <h3 data-i18n="faq_q4">How does it compare to other Markdown readers?</h3>
+        <p data-i18n="faq_a4">MD Reader is built with Rust and Tauri, making it extremely lightweight (~3.3 MB) compared to Electron-based alternatives. It uses react-markdown for GitHub-accurate rendering, and includes features like multi-tab sidebar and system-aware dark mode that many free readers lack.</p>
+      </div>
+      <div class="faq-item">
+        <h3 data-i18n="faq_q5">Can I use it offline?</h3>
+        <p data-i18n="faq_a5">Absolutely. MD Reader works completely offline. No internet connection required to read your local Markdown files.</p>
+      </div>
+      <div class="faq-item">
+        <h3 data-i18n="faq_q6">How do I open a file?</h3>
+        <p data-i18n="faq_a6">Three ways: drag and drop <code>.md</code> files into the window, click "Open File" in the sidebar, or use the file dialog. You can open multiple files and switch between them using the sidebar tabs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="container">
     <p>MD Reader &middot; MIT License &middot; <a href="https://github.com/yunxuanhao/markdown_reader" target="_blank" rel="noopener">GitHub</a> &middot; <a href="https://github.com/yunxuanhao/markdown_reader/blob/main/README.md" target="_blank" rel="noopener">README</a></p>
@@ -252,7 +336,7 @@ footer a:hover { text-decoration: underline; }
 <script>
 const i18n = {
   en: {
-    nav_features: 'Features', nav_download: 'Download',
+    nav_features: 'Features', nav_download: 'Download', nav_faq: 'FAQ',
     hero_title: 'Read Markdown<br>Beautifully',
     hero_sub: 'A lightweight desktop reader with GitHub-style rendering, multi-tab sidebar, and system-aware dark mode.',
     hero_download: 'Download Free',
@@ -272,11 +356,24 @@ const i18n = {
     download_title: 'Download',
     mac_warn_title: '⚠ macOS users:',
     mac_warn_text: 'The app is not notarized. If you see a "damaged" warning, right-click the app and select <strong>Open</strong>, or run:',
+    faq_title: 'Frequently Asked Questions',
+    faq_q1: 'What is MD Reader?',
+    faq_a1: 'MD Reader is a free, open-source desktop Markdown reader that renders <code>.md</code> files exactly like GitHub README pages. It supports GFM tables, task lists, code blocks, and more — all in a clean, distraction-free interface.',
+    faq_q2: 'Is MD Reader really free?',
+    faq_a2: 'Yes, completely free and open source under the MIT license. No ads, no telemetry, no premium tiers. Download and use it forever.',
+    faq_q3: 'Which platforms are supported?',
+    faq_a3: 'MD Reader runs on macOS (both Apple Silicon and Intel), Windows x64, and Linux x64. All platforms get native builds with genuine platform look and feel.',
+    faq_q4: 'How does it compare to other Markdown readers?',
+    faq_a4: 'MD Reader is built with Rust and Tauri, making it extremely lightweight (~3.3 MB) compared to Electron-based alternatives. It uses react-markdown for GitHub-accurate rendering, and includes features like multi-tab sidebar and system-aware dark mode that many free readers lack.',
+    faq_q5: 'Can I use it offline?',
+    faq_a5: 'Absolutely. MD Reader works completely offline. No internet connection required to read your local Markdown files.',
+    faq_q6: 'How do I open a file?',
+    faq_a6: 'Three ways: drag and drop <code>.md</code> files into the window, click "Open File" in the sidebar, or use the file dialog. You can open multiple files and switch between them using the sidebar tabs.',
     loading: 'Loading latest release…',
     error: 'Failed to load release info. Check the <a href="https://github.com/yunxuanhao/markdown_reader/releases">Releases page</a>.'
   },
   zh: {
-    nav_features: '功能', nav_download: '下载',
+    nav_features: '功能', nav_download: '下载', nav_faq: '常见问题',
     hero_title: '优雅地阅读<br>Markdown',
     hero_sub: '轻量级桌面 Markdown 阅读器，支持 GitHub 风格渲染、多标签侧边栏和自动跟随系统的暗色模式。',
     hero_download: '免费下载',
@@ -293,6 +390,19 @@ const i18n = {
     feat_perf_desc: '约 3.3 MB 的二进制文件。基于 Rust 和 Tauri 构建，启动迅速，内存占用低。',
     feat_cross_title: '跨平台',
     feat_cross_desc: '原生应用，支持 macOS（ARM64 和 Intel）、Windows（x64）和 Linux（x64）。',
+    faq_title: '常见问题',
+    faq_q1: 'MD Reader 是什么？',
+    faq_a1: 'MD Reader 是一款免费开源的桌面 Markdown 阅读器，可将 <code>.md</code> 文件渲染为与 GitHub README 页面完全一致的效果。支持 GFM 表格、任务列表、代码块等，界面简洁无干扰。',
+    faq_q2: 'MD Reader 真的免费吗？',
+    faq_a2: '是的，完全免费开源，使用 MIT 许可证。没有广告、不收集数据、没有付费版本。可永久免费下载使用。',
+    faq_q3: '支持哪些操作系统？',
+    faq_a3: 'MD Reader 支持 macOS（Apple Silicon 和 Intel）、Windows x64 和 Linux x64。所有平台均提供原生构建，具有真正的平台体验。',
+    faq_q4: '与其他 Markdown 阅读器相比如何？',
+    faq_a4: 'MD Reader 使用 Rust 和 Tauri 构建，与基于 Electron 的同类产品相比极其轻量（约 3.3 MB）。使用 react-markdown 进行 GitHub 精确渲染，支持多标签侧边栏和跟随系统的暗色模式，这些功能在许多免费阅读器中是缺失的。',
+    faq_q5: '可以离线使用吗？',
+    faq_a5: '完全可以。MD Reader 完全离线工作，读取本地 Markdown 文件不需要任何网络连接。',
+    faq_q6: '如何打开文件？',
+    faq_a6: '三种方式：将 <code>.md</code> 文件拖入窗口、点击侧边栏中的"Open File"按钮、或使用文件对话框。可以同时打开多个文件并在侧边栏标签中切换。',
     download_title: '下载',
     mac_warn_title: '⚠ macOS 用户请注意：',
     mac_warn_text: '应用未经过公证。如果打开时提示"已损坏"，请右键点击应用选择 <strong>打开</strong>，或执行：',

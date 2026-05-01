@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://yunxuanhao.github.io/markdown_reader/sitemap.xml

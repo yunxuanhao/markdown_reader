@@ -39,6 +39,8 @@ jobs:
         run: |
           mkdir -p _site
           cp landing/index.html _site/
+          cp landing/sitemap.xml _site/
+          cp landing/robots.txt _site/
           cp -r images _site/
 
       - name: Upload artifact
