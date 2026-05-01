@@ -37,7 +37,7 @@ Download the latest release from the [Releases](https://github.com/yunxuanhao/ma
 
 > **macOS users:** Since the app is not notarized, you may see a "damaged" warning. Right-click the app and select **Open**, or run:
 > ```bash
-> xattr -d com.apple.quarantine "Markdown Reader.app"
+> xattr -d com.apple.quarantine /Applications/Markdown\ Reader.app
 > ```
 
 ## Development

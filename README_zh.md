@@ -37,7 +37,7 @@
 
 > **macOS 用户：** 由于应用未经过公证，打开时可能会提示"已损坏"。请右键点击应用选择 **打开**，或执行：
 > ```bash
-> xattr -d com.apple.quarantine "Markdown Reader.app"
+> xattr -d com.apple.quarantine /Applications/Markdown\ Reader.app
 > ```
 
 ## 开发
