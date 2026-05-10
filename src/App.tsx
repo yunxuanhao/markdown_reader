@@ -4,8 +4,7 @@ import remarkGfm from "remark-gfm";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readTextFile } from "@tauri-apps/plugin-fs";
-import "github-markdown-css/github-markdown-light.css";
-import "github-markdown-css/github-markdown-dark.css";
+import "github-markdown-css/github-markdown.css";
 import "./App.css";
 
 type Theme = "light" | "dark" | "system";
