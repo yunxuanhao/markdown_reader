@@ -69,11 +69,32 @@ jobs:
       - name: Build
         run: pnpm tauri build --target ${{ matrix.platform.target }}
 
+      - name: Diagnose macOS bundle
+        if: runner.os == 'macOS'
+        run: |
+          echo "=== target/release/bundle/macos/ ==="
+          ls -la src-tauri/target/release/bundle/macos/ 2>/dev/null || echo "(not found)"
+          echo "=== target/${{ matrix.platform.target }}/release/bundle/macos/ ==="
+          ls -la "src-tauri/target/${{ matrix.platform.target }}/release/bundle/macos/" 2>/dev/null || echo "(not found)"
+          echo "=== Find all .app ==="
+          find src-tauri/target -name "*.app" -type d 2>/dev/null || echo "(none found)"
+          echo "=== Find all .dmg ==="
+          find src-tauri/target -name "*.dmg" -type f 2>/dev/null || echo "(none found)"
+
       - name: Fix macOS ad-hoc signature
         if: runner.os == 'macOS'
         run: |
-          APP="src-tauri/target/${{ matrix.platform.target }}/release/bundle/macos/"*.app
-          codesign --force --deep --sign - "$APP"
+          BUNDLE_DIR="src-tauri/target/${{ matrix.platform.target }}/release/bundle/macos"
+          if [ ! -d "$BUNDLE_DIR" ]; then
+            BUNDLE_DIR="src-tauri/target/release/bundle/macos"
+          fi
+          APP=$(find "$BUNDLE_DIR" -maxdepth 1 -name "*.app" -type d 2>/dev/null | head -1)
+          if [ -n "$APP" ] && [ -d "$APP" ]; then
+            codesign --force --deep --sign - "$APP"
+            echo "codesigned: $APP"
+          else
+            echo "WARNING: No .app found at $BUNDLE_DIR, skipping codesign"
+          fi
 
       - name: Upload macOS ARM artifact
         if: matrix.platform.target == 'aarch64-apple-darwin'
