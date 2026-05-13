@@ -1,9 +1,10 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readTextFile } from "@tauri-apps/plugin-fs";
+import { listen } from "@tauri-apps/api/event";
 import "github-markdown-css/github-markdown.css";
 import "./App.css";
 
@@ -29,6 +30,7 @@ export default function App() {
   const [files, setFiles] = useState<FileEntry[]>([]);
   const [activePath, setActivePath] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const filesRef = useRef(files);
   filesRef.current = files;
   const resolvedTheme = resolveTheme(theme);
@@ -95,6 +97,23 @@ export default function App() {
     };
   }, [openPaths]);
 
+  // Listen for files opened via OS file association (CLI args)
+  useEffect(() => {
+    let cancelled = false;
+    const setup = async () => {
+      const unlisten = await listen<string[]>("open-files", (event) => {
+        if (cancelled) return;
+        openPaths(event.payload);
+      });
+      return unlisten;
+    };
+    const promise = setup();
+    return () => {
+      cancelled = true;
+      promise.then((fn) => fn());
+    };
+  }, [openPaths]);
+
   const handleOpenFile = useCallback(async () => {
     const selected = await open({
       multiple: true,
@@ -125,10 +144,62 @@ export default function App() {
 
   const activeFile = files.find((f) => f.path === activePath) || null;
 
+  const displayNames = useMemo(() => {
+    const map = new Map<string, string>();
+    const byName = new Map<string, FileEntry[]>();
+    for (const f of files) {
+      const group = byName.get(f.name) || [];
+      group.push(f);
+      byName.set(f.name, group);
+    }
+    for (const [, group] of byName) {
+      if (group.length === 1) {
+        map.set(group[0].path, group[0].name);
+        continue;
+      }
+      // Duplicate filenames: find minimal unique suffix from parent upward
+      const segmentsList = group.map((f) => {
+        const segs = f.path.split(/[/\\]/);
+        return { entry: f, segs };
+      });
+      let depth = 0;
+      const maxDepth = Math.min(...segmentsList.map((s) => s.segs.length)) - 1;
+      while (depth < maxDepth) {
+        const keys = segmentsList.map(
+          (s) => s.segs.slice(s.segs.length - 2 - depth).join("/")
+        );
+        if (new Set(keys).size === group.length) break;
+        depth++;
+      }
+      for (const { entry, segs } of segmentsList) {
+        const used = segs.slice(segs.length - 1 - depth);
+        if (depth < segs.length - 1 && segs.length - 1 - depth > 0) {
+          map.set(entry.path, `.../${used.join("/")}`);
+        } else {
+          map.set(entry.path, used.join("/"));
+        }
+      }
+    }
+    return map;
+  }, [files]);
+
   return (
     <div className={`app ${resolvedTheme === "dark" ? "dark" : ""}`}>
-      <aside className="sidebar">
+      <aside className={`sidebar${sidebarCollapsed ? " collapsed" : ""}`}>
         <div className="sidebar-header">
+          <button
+            className="collapse-btn"
+            onClick={() => setSidebarCollapsed((v) => !v)}
+            title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              {sidebarCollapsed ? (
+                <path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+              ) : (
+                <path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+              )}
+            </svg>
+          </button>
           <span className="logo">MD Reader</span>
           <div className="theme-toggle">
             <button
@@ -180,7 +251,7 @@ export default function App() {
                   <path d="M2 2.5a.5.5 0 0 1 .5-.5h4.5l.5.5H14a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5H2.5a.5.5 0 0 1-.5-.5v-10z" />
                 </svg>
               </span>
-              <span className="file-name">{f.name}</span>
+              <span className="file-name" title={f.path}>{displayNames.get(f.path) || f.name}</span>
               <button className="close-tab" onClick={(e) => handleCloseFile(f.path, e)}>
                 <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
                   <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
