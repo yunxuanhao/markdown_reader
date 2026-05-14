@@ -4,7 +4,7 @@ import remarkGfm from "remark-gfm";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readTextFile } from "@tauri-apps/plugin-fs";
-import { listen } from "@tauri-apps/api/event";
+import { invoke } from "@tauri-apps/api/core";
 import "github-markdown-css/github-markdown.css";
 import "./App.css";
 
@@ -58,7 +58,7 @@ export default function App() {
     setLoading(true);
     const currentFiles = filesRef.current;
     for (const path of paths) {
-      if (!path.endsWith(".md")) continue;
+      if (!path.endsWith(".md") && !path.endsWith(".markdown") && !path.endsWith(".mdx")) continue;
       if (currentFiles.some((f) => f.path === path)) {
         setActivePath(path);
         continue;
@@ -97,27 +97,20 @@ export default function App() {
     };
   }, [openPaths]);
 
-  // Listen for files opened via OS file association (CLI args)
+  // Fetch files opened via OS file association (CLI args)
+  // Pull-based: avoids race between Rust setup() emit and React mount.
   useEffect(() => {
-    let cancelled = false;
-    const setup = async () => {
-      const unlisten = await listen<string[]>("open-files", (event) => {
-        if (cancelled) return;
-        openPaths(event.payload);
-      });
-      return unlisten;
-    };
-    const promise = setup();
-    return () => {
-      cancelled = true;
-      promise.then((fn) => fn());
-    };
+    invoke<string[]>("get_pending_files")
+      .then((paths) => {
+        if (paths && paths.length > 0) openPaths(paths);
+      })
+      .catch(() => {});
   }, [openPaths]);
 
   const handleOpenFile = useCallback(async () => {
     const selected = await open({
       multiple: true,
-      filters: [{ name: "Markdown", extensions: ["md"] }],
+      filters: [{ name: "Markdown", extensions: ["md", "markdown", "mdx"] }],
     });
     if (selected) {
       const paths = Array.isArray(selected) ? selected : [selected];

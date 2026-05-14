@@ -473,6 +473,14 @@ async function fetchRelease() {
       return (n.endsWith('.dmg') || n.endsWith('.msi') || n.endsWith('.exe') || n.endsWith('.deb') || n.endsWith('.appimage'));
     });
 
+    // Sort: macOS (dmg) first, Windows (msi/exe) second, Linux (deb/AppImage) third
+    const platformOrder = { dmg: 1, msi: 2, exe: 2, deb: 3, appimage: 3 };
+    filtered.sort((a, b) => {
+      const extA = a.name.split('.').pop().toLowerCase();
+      const extB = b.name.split('.').pop().toLowerCase();
+      return (platformOrder[extA] || 99) - (platformOrder[extB] || 99);
+    });
+
     if (filtered.length === 0) {
       grid.innerHTML = '<div class="error">' + dict.error + '</div>';
       return;
