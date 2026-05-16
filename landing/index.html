@@ -156,8 +156,32 @@ nav {
 .download h2 { text-align: center; font-size: 32px; margin-bottom: 8px; }
 .download .version { text-align: center; color: var(--text-secondary); font-size: 14px; margin-bottom: 40px; }
 .download-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px; max-width: 700px; margin: 0 auto;
+  display: flex;
+  gap: 16px;
+  max-width: 900px;
+  margin: 0 auto;
+  justify-content: center;
+}
+.download-column {
+  flex: 1;
+  min-width: 200px;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.download-column-label {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.download-column-label .platform-icon-label {
+  font-size: 20px;
+  margin-right: 4px;
 }
 .download-card {
   background: var(--bg-card); border: 1px solid var(--border);
@@ -168,7 +192,7 @@ nav {
 .download-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-2px); }
 .download-card .platform-icon { font-size: 32px; }
 .download-card .platform-name { font-weight: 600; font-size: 15px; }
-.download-card .platform-ext { color: var(--text-secondary); font-size: 13px; }
+.download-card .platform-ext { color: var(--text-secondary); font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
 .download-card .platform-arch { color: var(--text-secondary); font-size: 12px; opacity: 0.7; }
 
 /* macOS warning */
@@ -209,6 +233,8 @@ footer a:hover { text-decoration: underline; }
   .hero { padding: 48px 16px 40px; }
   .hero h1 { font-size: 36px; }
   nav { padding: 16px 20px; }
+  .download-grid { flex-direction: column; align-items: center; }
+  .download-column { max-width: 100%; }
 }
 </style>
 </head>
@@ -445,6 +471,23 @@ function getPlatformName(ext) {
   return ext;
 }
 
+function getPlatformGroup(name, ext) {
+  if (ext === 'dmg') return 'macOS';
+  if (ext === 'msi' || ext === 'exe') return 'Windows';
+  if (ext === 'deb' || ext === 'appimage') return 'Linux';
+  return 'Other';
+}
+
+function getPlatformGroupIcon(group) {
+  if (group === 'macOS') return '🍎';
+  if (group === 'Windows') return '🪟';
+  if (group === 'Linux') return '🐧';
+  return '📦';
+}
+
+const PLATFORM_ORDER = ['macOS', 'Windows', 'Linux'];
+const EXT_ORDER = { dmg: 1, msi: 2, exe: 3, deb: 4, appimage: 5 };
+
 function getArchHint(name) {
   if (name.includes('aarch64') || name.includes('arm64')) return 'ARM64';
   if (name.includes('x64') || name.includes('x86_64') || name.includes('amd64')) return 'x64';
@@ -473,13 +516,23 @@ async function fetchRelease() {
       return (n.endsWith('.dmg') || n.endsWith('.msi') || n.endsWith('.exe') || n.endsWith('.deb') || n.endsWith('.appimage'));
     });
 
-    // Sort: macOS (dmg) first, Windows (msi/exe) second, Linux (deb/AppImage) third
-    const platformOrder = { dmg: 1, msi: 2, exe: 2, deb: 3, appimage: 3 };
-    filtered.sort((a, b) => {
-      const extA = a.name.split('.').pop().toLowerCase();
-      const extB = b.name.split('.').pop().toLowerCase();
-      return (platformOrder[extA] || 99) - (platformOrder[extB] || 99);
+    // Group assets by platform
+    const groups = {};
+    filtered.forEach(a => {
+      const ext = a.name.split('.').pop().toLowerCase();
+      const group = getPlatformGroup(a.name, ext);
+      if (!groups[group]) groups[group] = [];
+      groups[group].push(a);
     });
+
+    // Sort within each group by extension order
+    for (const g of Object.keys(groups)) {
+      groups[g].sort((a, b) => {
+        const extA = a.name.split('.').pop().toLowerCase();
+        const extB = b.name.split('.').pop().toLowerCase();
+        return (EXT_ORDER[extA] || 99) - (EXT_ORDER[extB] || 99);
+      });
+    }
 
     if (filtered.length === 0) {
       grid.innerHTML = '<div class="error">' + dict.error + '</div>';
@@ -488,20 +541,36 @@ async function fetchRelease() {
 
     grid.innerHTML = '';
     let hasMac = false;
-    filtered.forEach(a => {
-      const ext = a.name.split('.').pop();
-      if (ext === 'dmg') hasMac = true;
-      const arch = getArchHint(a.name);
-      const card = document.createElement('a');
-      card.className = 'download-card';
-      card.href = a.browser_download_url;
-      card.innerHTML = [
-        '<span class="platform-icon">' + getPlatformIcon(ext) + '</span>',
-        '<span class="platform-name">' + getPlatformName(ext) + '</span>',
-        '<span class="platform-ext">.' + ext + '</span>',
-        arch ? '<span class="platform-arch">' + arch + '</span>' : ''
-      ].join('');
-      grid.appendChild(card);
+
+    // Render columns in platform order
+    PLATFORM_ORDER.forEach(group => {
+      const assets = groups[group];
+      if (!assets || assets.length === 0) return;
+      if (group === 'macOS') hasMac = true;
+
+      const column = document.createElement('div');
+      column.className = 'download-column';
+
+      const label = document.createElement('div');
+      label.className = 'download-column-label';
+      label.innerHTML = '<span class="platform-icon-label">' + getPlatformGroupIcon(group) + '</span> ' + group;
+      column.appendChild(label);
+
+      assets.forEach(a => {
+        const ext = a.name.split('.').pop();
+        const arch = getArchHint(a.name);
+        const card = document.createElement('a');
+        card.className = 'download-card';
+        card.href = a.browser_download_url;
+        card.innerHTML = [
+          '<span class="platform-name">.' + ext + '</span>',
+          arch ? '<span class="platform-arch">' + arch + '</span>' : '',
+          '<span class="platform-ext">' + a.name + '</span>'
+        ].join('');
+        column.appendChild(card);
+      });
+
+      grid.appendChild(column);
     });
 
     if (hasMac) warning.style.display = 'block';
