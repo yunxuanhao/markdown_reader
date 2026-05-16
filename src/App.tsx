@@ -40,8 +40,13 @@ export default function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [fileTree, setFileTree] = useState<FileTreeNode[]>([]);
   const [expandedDirs, setExpandedDirs] = useState<Set<string>>(new Set());
+  const [treeRoot, setTreeRoot] = useState<string | null>(null);
   const filesRef = useRef(files);
   filesRef.current = files;
+  const activePathRef = useRef(activePath);
+  activePathRef.current = activePath;
+  const treeRootRef = useRef(treeRoot);
+  treeRootRef.current = treeRoot;
   const resolvedTheme = resolveTheme(theme);
 
   // Persist theme preference
@@ -134,6 +139,7 @@ export default function App() {
                 setExpandedDirs(new Set([p]));
                 const tree = await readDirRecursive(p);
                 setFileTree(tree);
+                setTreeRoot(p);
               } catch {
                 // Not a directory, treat as file
                 mdFiles.push(p);
@@ -162,6 +168,44 @@ export default function App() {
       .catch(() => {});
   }, [openPaths]);
 
+  // Auto-refresh active file and file tree when window gains focus
+  useEffect(() => {
+    let cancelled = false;
+    const setup = async () => {
+      const unlisten = await getCurrentWindow().onFocusChanged(async ({ payload: focused }) => {
+        if (cancelled || !focused) return;
+        const activePath = activePathRef.current;
+        const root = treeRootRef.current;
+        // Refresh active file
+        if (activePath) {
+          try {
+            const content = await readTextFile(activePath);
+            setFiles((prev) =>
+              prev.map((f) => (f.path === activePath ? { ...f, content } : f))
+            );
+          } catch {
+            // file may have been deleted, ignore
+          }
+        }
+        // Refresh file tree
+        if (root) {
+          try {
+            const tree = await readDirRecursive(root);
+            setFileTree(tree);
+          } catch {
+            // folder may have been deleted, ignore
+          }
+        }
+      });
+      return unlisten;
+    };
+    const promise = setup();
+    return () => {
+      cancelled = true;
+      promise.then((fn) => fn());
+    };
+  }, [readDirRecursive]);
+
   const handleOpen = useCallback(async () => {
     setLoading(true);
     const selected = await open({
@@ -188,6 +232,7 @@ export default function App() {
       setExpandedDirs(new Set([dirPath]));
       const tree = await readDirRecursive(dirPath);
       setFileTree(tree);
+      setTreeRoot(dirPath);
     }
     setLoading(false);
   }, [openPaths, readDirRecursive]);
